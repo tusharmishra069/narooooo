@@ -1,13 +1,25 @@
 /* ═══════════════════════════════════════════════════
    NAROTTAM SHARAN PORTFOLIO — main.js v4
    Full rewrite — Advanced Developer
+   Production Ready with EmailJS Integration
 ═══════════════════════════════════════════════════ */
 'use strict';
+
+// Import EmailJS
+import emailjs from 'emailjs-com';
 
 const $ = (s, p = document) => p.querySelector(s);
 const $$ = (s, p = document) => [...p.querySelectorAll(s)];
 const lerp = (a, b, t) => a + (b - a) * t;
 const clamp = (v, min, max) => Math.min(Math.max(v, min), max);
+
+// Initialize EmailJS with Public Key
+const initEmailJS = () => {
+  const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+  if (publicKey) {
+    emailjs.init(publicKey);
+  }
+};
 
 /* ── VIDEO DATA ── */
 const VIDEO_URLS = [
@@ -45,8 +57,9 @@ const appState = {
   cursor: { mx: 0, my: 0, ox: 0, oy: 0 }
 };
 
-/* ═══════════════════ BOOT ═══════════════════ */
+/* ═══════════════════════════════════════════════════ BOOT ═══════════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
+  initEmailJS();
   initTheme();
   initCursor();
   initNav();
@@ -818,58 +831,121 @@ function initSmoothScroll() {
   });
 }
 
-/* ═══════════════════ FORM ═══════════════════ */
+/* ═══════════════════════════════════════════════════ FORM (EmailJS) ═══════════════════════════════════════════════════ */
 function initForm() {
-  const btn = $('#submitBtn');
-  const success = $('#formSuccess');
-  const form = btn ? btn.closest('form') : null;
-  if (!btn || !form) return;
+  const contactForm = document.getElementById('contactForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const formSuccess = document.getElementById('formSuccess');
+  
+  if (!contactForm || !submitBtn) {
+    console.error('Form elements not found');
+    return;
+  }
 
-  // Listen on the form's submit event so validation runs for keyboard/Enter too
-  form.addEventListener('submit', e => {
-    e.preventDefault(); // prevent native navigation — required for Netlify AJAX
+  contactForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    // Get form values
+    const nameInput = document.getElementById('fn');
+    const emailInput = document.getElementById('fe');
+    const companyInput = document.getElementById('fc');
+    const serviceInput = document.getElementById('fs');
+    const messageInput = document.getElementById('msg');
+    
+    const name = nameInput.value.trim();
+    const email = emailInput.value.trim();
+    const company = companyInput.value.trim() || 'Not specified';
+    const service = serviceInput.value.trim() || 'Not specified';
+    const message = messageInput.value.trim() || 'No message provided';
+    
+    // Validation
+    if (!name) {
+      nameInput.style.borderColor = '#e05555';
+      nameInput.focus();
+      setTimeout(() => nameInput.style.borderColor = '', 2000);
+      return;
+    }
+    
+    if (!email) {
+      emailInput.style.borderColor = '#e05555';
+      emailInput.focus();
+      setTimeout(() => emailInput.style.borderColor = '', 2000);
+      return;
+    }
+    
+    if (!isValidEmail(email)) {
+      emailInput.style.borderColor = '#e05555';
+      emailInput.focus();
+      setTimeout(() => emailInput.style.borderColor = '', 2000);
+      return;
+    }
 
-    const name = $('#fn').value.trim();
-    const email = $('#fe').value.trim();
-    if (!name) { flashField('#fn'); return; }
-    if (!email) { flashField('#fe'); return; }
+    // Update UI
+    const submitText = submitBtn.querySelector('.c-submit-text');
+    const submitArrow = submitBtn.querySelector('.c-submit-arrow');
+    
+    if (submitText) submitText.textContent = 'Sending…';
+    if (submitArrow) submitArrow.textContent = '…';
+    submitBtn.disabled = true;
+    
+    if (formSuccess) formSuccess.classList.remove('show');
 
-    const text = $('.c-submit-text', btn);
-    const arrow = $('.c-submit-arrow', btn);
-    if (text) text.textContent = 'Sending…';
-    if (arrow) arrow.textContent = '…';
-    btn.disabled = true;
-    if (success) success.classList.remove('show');
+    try {
+      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
 
-    // Netlify AJAX form submission
-    fetch('/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams(new FormData(form)).toString()
-    })
-      .then(() => {
-        if (text) text.textContent = 'Sent!';
-        if (arrow) arrow.textContent = '✓';
-        if (success) success.classList.add('show');
-        setTimeout(() => {
-          if (text) text.textContent = 'Send Message';
-          if (arrow) arrow.innerHTML = '&rarr;';
-          btn.disabled = false;
-          $$('.c-form input,.c-form textarea').forEach(el => el.value = '');
-          if (success) success.classList.remove('show');
-        }, 3000);
-      })
-      .catch(() => {
-        if (text) text.textContent = 'Send Message';
-        if (arrow) arrow.innerHTML = '&rarr;';
-        btn.disabled = false;
-        flashField('#fn'); // surface an error hint
-      });
+      if (!serviceId || !templateId) {
+        console.error('EmailJS config missing:', { serviceId, templateId });
+        throw new Error('Email service not configured');
+      }
+
+      const formData = {
+        from_name: name,
+        from_email: email,
+        from_company: company,
+        from_service: service,
+        message: message,
+        reply_to: email
+      };
+
+      console.log('Sending contact form with:', formData);
+
+      // Send admin notification (auto-reply handled by EmailJS dashboard)
+      await emailjs.send(serviceId, templateId, formData);
+      console.log('Contact form sent! Auto-reply will be sent automatically.');
+
+      // Success state
+      if (submitText) submitText.textContent = 'Sent!';
+      if (submitArrow) submitArrow.textContent = '✓';
+      if (formSuccess) formSuccess.classList.add('show');
+
+      // Reset after 3 seconds
+      setTimeout(() => {
+        if (submitText) submitText.textContent = 'Send Message';
+        if (submitArrow) submitArrow.innerHTML = '&rarr;';
+        submitBtn.disabled = false;
+        nameInput.value = '';
+        emailInput.value = '';
+        companyInput.value = '';
+        serviceInput.value = '';
+        messageInput.value = '';
+        if (formSuccess) formSuccess.classList.remove('show');
+      }, 3000);
+    } catch (error) {
+      console.error('Email submission error:', error);
+      if (submitText) submitText.textContent = 'Send Message';
+      if (submitArrow) submitArrow.innerHTML = '&rarr;';
+      submitBtn.disabled = false;
+      
+      // Show error
+      nameInput.style.borderColor = '#e05555';
+      nameInput.focus();
+      setTimeout(() => nameInput.style.borderColor = '', 2000);
+    }
   });
 
-  function flashField(sel) {
-    const el = $(sel); if (!el) return;
-    el.style.borderColor = '#e05555'; el.focus();
-    setTimeout(() => el.style.borderColor = '', 2000);
+  function isValidEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
   }
 }

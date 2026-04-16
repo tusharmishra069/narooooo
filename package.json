@@ -1,0 +1,31 @@
+{
+  "name": "narottam-sharan-portfolio",
+  "version": "1.0.0",
+  "description": "portfolio website for Narottam Sharan - Senior Video Editor",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "start": "vite preview"
+  },
+  "keywords": [
+    "portfolio",
+    "video-editor",
+    "creative",
+    "freelance"
+  ],
+  "author": "Narottam Sharan",
+  "license": "MIT",
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.0",
+    "terser": "^5.46.1",
+    "vite": "^5.0.0"
+  },
+  "dependencies": {
+    "emailjs-com": "^3.2.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

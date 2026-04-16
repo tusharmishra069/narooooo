@@ -1,15 +1,51 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
-<link rel="icon" href="narottam.png">
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Narottam Sharan — Senior Video Editor</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,200;9..144,300;9..144,400;9..144,700&family=Cormorant+Garamond:ital,wght@0,400;1,400;1,500;1,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
-<script async src="https://www.instagram.com/embed.js"></script>
+  <!-- Meta Tags -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Narottam Sharan - Senior Video Editor specializing in cinematic short-form reels, brand films, and product visualization for D2C brands. Based in Bhilai, India.">
+  <meta name="keywords" content="video editor, video editing, reels, short-form content, brand films, motion graphics, product visualization, D2C">
+  <meta name="author" content="Narottam Sharan">
+  <meta name="theme-color" content="#09090b">
+  <meta name="robots" content="index, follow">
+  <meta name="language" content="English">
+
+  <!-- Open Graph / Social Media -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://narottamsharan.com">
+  <meta property="og:title" content="Narottam Sharan — Senior Video Editor">
+  <meta property="og:description" content="Premium video editing, cinematic reels, and brand films for international D2C brands.">
+  <meta property="og:image" content="narottam.png">
+  <meta property="og:site_name" content="Narottam Sharan">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://narottamsharan.com">
+  <meta property="twitter:title" content="Narottam Sharan — Senior Video Editor">
+  <meta property="twitter:description" content="Premium video editing, cinematic reels, and brand films for international D2C brands.">
+  <meta property="twitter:image" content="narottam.png">
+
+  <!-- Favicon & Icons -->
+  <link rel="icon" href="narottam.png" type="image/png">
+  <link rel="apple-touch-icon" href="narottam.png">
+
+  <!-- Title -->
+  <title>Narottam Sharan — Senior Video Editor | Cinematic Reels & Brand Films</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,200;9..144,300;9..144,400;9..144,700&family=Cormorant+Garamond:ital,wght@0,400;1,400;1,500;1,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- External Scripts -->
+  <script async src="https://www.instagram.com/embed.js"></script>
+
+  <!-- Analytics (Optional - Add your tracking code) -->
+  <!-- Google Analytics or Vercel Analytics can be added here -->
 </head>
 <body>
 
@@ -471,9 +507,7 @@
           </div>
         </div>
       </div>
-      <form class="c-form glass-panel sr-r d2" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
-        <input type="hidden" name="form-name" value="contact">
-        <p hidden><label>Don't fill this out: <input name="bot-field"></label></p>
+      <form class="c-form glass-panel sr-r d2" id="contactForm" name="contact" method="POST">
         <div class="c-form-top">
           <div class="c-form-kicker">Start a Project</div>
           <div class="c-form-title">Tell me about your next video.</div>
@@ -484,7 +518,7 @@
         </div>
         <div class="fg"><input type="text" id="fc" name="company" placeholder="Company / Brand"><label for="fc">Company / Brand</label></div>
         <div class="fg"><input type="text" id="fs" name="service" placeholder="Service Required"><label for="fs">Service Required</label></div>
-        <div class="fg"><textarea id="fm" name="message" rows="5" placeholder="Your Message"></textarea><label for="fm">Your Message</label></div>
+        <div class="fg"><textarea id="msg" name="message" rows="5" placeholder="Your Message"></textarea><label for="msg">Your Message</label></div>
         <button class="c-submit mag-btn" id="submitBtn" type="submit">
           <span class="c-submit-text">Send Message</span>
           <span class="c-submit-arrow">&rarr;</span>
@@ -514,6 +548,6 @@
   </div>
 </footer>
 
-<script src="main.js"></script>
+<script type="module" src="main.js"></script>
 </body>
 </html>
